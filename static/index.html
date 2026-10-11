@@ -6,13 +6,14 @@
 <title>Meridian Bank - Multi-Agent Console</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Serif:wght@500&display=swap">
 <style>
 :root{
-  --bg:#0F172A;--card:#1B2333;--muted:#272F42;--border:#334155;--fg:#F8FAFC;--fg-muted:#94A3B8;
-  --primary:#F59E0B;--on-primary:#0F172A;--danger:#EF4444;--success:#34D399;--ring:#F59E0B;
-  --a-supervisor:#F59E0B;--a-banking:#38BDF8;--a-fraud:#F87171;--a-credit:#34D399;
-  --radius:8px;--font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+  --bg:#F6F3EC;--card:#FFFFFF;--muted:#EDE8DD;--border:#DDD6C8;--fg:#1F2421;--fg-muted:#5A615B;
+  --primary:#1F5F4A;--on-primary:#FFFFFF;--danger:#B42318;--success:#1F7A4D;--warn:#8A5200;--ring:#1F5F4A;
+  --a-supervisor:#8A5200;--a-banking:#1D5FA8;--a-fraud:#B42318;--a-credit:#1F7A4D;
+  --radius:10px;--font:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --serif:"IBM Plex Serif",Georgia,serif;--mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
 }
 *{box-sizing:border-box}
 html,body{margin:0}
@@ -22,102 +23,112 @@ button,select,textarea{font:inherit;color:inherit}
 .sr-only{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
 svg{width:18px;height:18px;flex:none;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .mono{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--c,var(--border));flex:none}
+[data-agent=supervisor]{--c:var(--a-supervisor)}[data-agent=banking]{--c:var(--a-banking)}
+[data-agent=fraud]{--c:var(--a-fraud)}[data-agent=credit]{--c:var(--a-credit)}
 
-header{display:flex;flex-wrap:wrap;align-items:center;gap:12px 16px;padding:12px 16px;border-bottom:1px solid var(--border)}
-.brand{display:flex;align-items:center;gap:8px;font-weight:600;margin-right:auto}
-.brand svg{color:var(--primary)}
-.brand span{color:var(--fg-muted);font-weight:400}
+header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:12px 20px;border-bottom:1px solid var(--border);background:var(--card)}
+.brand{font:500 20px/1.2 var(--serif);margin-right:auto;display:flex;align-items:baseline;gap:10px}
+.brand span{font:400 14px var(--font);color:var(--fg-muted)}
 .field{display:flex;align-items:center;gap:8px;color:var(--fg-muted);font-size:14px}
-select{min-height:44px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;color:var(--fg);cursor:pointer;max-width:100%}
-.pill{font-size:13px;padding:4px 12px;border:1px solid var(--border);border-radius:999px;background:var(--card);color:var(--fg-muted)}
+select{min-height:44px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:0 12px;cursor:pointer;max-width:100%}
+.pill{display:inline-flex;align-items:center;gap:8px;font-size:13px;color:var(--fg-muted)}
+.pill.live .dot{background:var(--success)}
 
 main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr);gap:16px;padding:16px}
-.chat{display:flex;flex-direction:column;min-height:0;min-width:0}
-#messages{height:60dvh;overflow-y:auto;display:flex;flex-direction:column;gap:12px;padding:4px 0 12px}
-.empty{color:var(--fg-muted);margin:auto 0}
-.msg{max-width:88%;padding:8px 16px;border-radius:var(--radius);overflow-wrap:anywhere}
-.msg.user{align-self:flex-end;background:var(--muted)}
-.msg.assistant,.msg.working,.card{align-self:flex-start;background:var(--card);border:1px solid var(--border)}
-.msg.error{align-self:flex-start;background:var(--card);border:1px solid var(--danger)}
-.msg p{margin:0}
-.msg ul{margin:4px 0;padding-left:20px}
-.msg b{font-weight:600}
-.working{color:var(--fg-muted);display:flex;align-items:center;gap:8px}
-.dot{width:8px;height:8px;border-radius:50%;background:var(--dc,var(--fg-muted));flex:none}
-.working .dot{animation:pulse 1s ease-in-out infinite}
-@keyframes pulse{50%{opacity:.3}}
+.chat{display:flex;flex-direction:column;min-height:0;min-width:0;width:100%;max-width:760px;margin:0 auto}
+#messages{height:58dvh;overflow-y:auto;display:flex;flex-direction:column;gap:16px;padding:8px 4px 16px}
+.hello{margin:auto 0}
+.hello h1{font:500 30px/1.2 var(--serif);margin:0 0 4px}
+.hello p{margin:0;color:var(--fg-muted)}
+.msg{display:flex;flex-direction:column;gap:4px;max-width:88%;align-self:flex-start;animation:rise .2s ease-out}
+.msg.user{align-self:flex-end;align-items:flex-end}
+.meta{font-size:13px;color:var(--fg-muted)}
+.bubble{padding:10px 16px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);overflow-wrap:anywhere}
+.user .bubble{background:var(--primary);border-color:var(--primary);color:var(--on-primary);border-bottom-right-radius:2px}
+.assistant .bubble,.error .bubble{border-bottom-left-radius:2px}
+.error .bubble{border-color:var(--danger);color:var(--danger)}
+.bubble p{margin:0}.bubble p+p{margin-top:6px}
+.bubble ul{margin:6px 0;padding-left:20px}
+.bubble b{font-weight:600}
+.typing{display:flex;align-items:center;gap:10px;color:var(--fg-muted)}
+.typing i{width:6px;height:6px;border-radius:50%;background:currentColor;animation:blink 1.2s infinite}
+.typing i:nth-child(2){animation-delay:.2s}.typing i:nth-child(3){animation-delay:.4s;margin-right:4px}
+@keyframes blink{0%,60%,100%{opacity:.25}30%{opacity:1}}
+@keyframes rise{from{opacity:0;transform:translateY(4px)}}
 
-.card{max-width:min(440px,100%);padding:16px;border-radius:var(--radius);display:flex;flex-direction:column;gap:12px}
-.card h3{margin:0;font-size:16px;font-weight:600;display:flex;align-items:center;gap:8px}
-.card h3 svg{color:var(--primary)}
-.card dl{display:grid;grid-template-columns:auto 1fr;gap:4px 16px;margin:0}
-.card dt{color:var(--fg-muted)}
-.card dd{margin:0;text-align:right;overflow-wrap:anywhere}
-.card ul{margin:0;padding-left:20px;color:var(--fg-muted)}
-.badge{display:inline-block;padding:0 8px;border:1px solid currentColor;border-radius:999px;font-size:13px;font-weight:500;text-transform:uppercase}
-.badge.low{color:var(--success)}.badge.medium{color:var(--primary)}.badge.high{color:var(--danger)}
-.actions{display:flex;flex-wrap:wrap;gap:8px}
-.card .result{margin:0;font-weight:500}
+.card{align-self:flex-start;width:min(400px,100%);padding:20px;border-radius:var(--radius);background:var(--card);border:1px solid var(--border);border-top:3px solid var(--primary);display:flex;flex-direction:column;gap:8px;animation:rise .2s ease-out}
+.card .eyebrow{margin:0;font-size:13px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--primary)}
+.card .amount{margin:0;font:500 32px/1.2 var(--serif);font-variant-numeric:tabular-nums}
+.card .path{margin:0;color:var(--fg-muted)}
+.card .path b{font:400 15px var(--mono);color:var(--fg)}
+.card .risk{display:flex;align-items:center;gap:8px;margin-top:8px;font-size:14px;color:var(--fg-muted)}
+.card ul{margin:0;padding-left:20px;color:var(--fg-muted);font-size:14px}
+.badge{padding:1px 10px;border-radius:999px;font-size:13px;font-weight:600;border:1px solid currentColor}
+.badge.low{color:var(--success)}.badge.medium{color:var(--warn)}.badge.high{color:var(--danger)}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.card .result{margin:4px 0 0;font-weight:500}
 .card .result.ko{color:var(--danger)}.card .result.ok{color:var(--success)}
 
 button{min-height:44px;display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:0 16px;border-radius:var(--radius);border:1px solid var(--border);background:var(--card);cursor:pointer;transition:background-color .18s,border-color .18s,opacity .18s}
-button:hover:not(:disabled){background:var(--muted);border-color:var(--fg-muted)}
+button:hover:not(:disabled){background:var(--muted)}
 button.primary{background:var(--primary);border-color:var(--primary);color:var(--on-primary);font-weight:600}
-button.primary:hover:not(:disabled){background:var(--primary);filter:brightness(1.1)}
+button.primary:hover:not(:disabled){background:#174A39}
 button:disabled{opacity:.5;cursor:not-allowed}
 
-.chips{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0}
-.chips button{font-size:14px;text-align:left;border-radius:999px}
-form{display:flex;gap:8px;align-items:flex-end}
+.chips{display:flex;flex-wrap:wrap;gap:8px;padding:8px 0 12px}
+.chips button{font-size:14px;border-radius:999px;background:transparent}
+form{display:flex;gap:8px;align-items:flex-end;background:var(--card);border:1px solid var(--border);border-radius:14px;padding:8px}
+form:focus-within{border-color:var(--primary)}
 form div{flex:1;min-width:0}
-textarea{width:100%;min-height:44px;max-height:160px;resize:vertical;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:8px 12px;display:block}
+textarea{width:100%;min-height:44px;max-height:160px;resize:none;background:transparent;border:0;padding:10px 8px;display:block}
+textarea:focus-visible{outline:none}
 textarea::placeholder{color:var(--fg-muted)}
 
 aside{min-width:0;background:var(--card);border:1px solid var(--border);border-radius:var(--radius);display:flex;flex-direction:column;min-height:0}
 aside details{display:flex;flex-direction:column;min-height:0;flex:1}
-aside summary{min-height:44px;display:flex;align-items:center;padding:0 16px;font-weight:600;cursor:pointer;list-style:none}
-aside summary::-webkit-details-marker{display:none}
+aside>details>summary{min-height:52px;display:flex;flex-direction:column;justify-content:center;padding:12px 20px 8px;cursor:pointer;list-style:none}
+aside>details>summary::-webkit-details-marker{display:none}
+aside summary strong{font:500 18px/1.3 var(--serif)}
+aside summary small{font-size:13px;color:var(--fg-muted)}
 aside .body{display:flex;flex-direction:column;min-height:0;flex:1}
-.agents{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 12px;border-bottom:1px solid var(--border)}
-.chip{display:inline-flex;align-items:center;gap:8px;padding:0 12px;min-height:28px;border:1px solid var(--border);border-radius:999px;font-size:13px;color:var(--fg-muted);transition:border-color .18s,color .18s}
-.chip .dot{background:var(--border);transition:background-color .18s}
-.chip.on{border-color:var(--c);color:var(--fg)}
-.chip.on .dot{background:var(--c)}
-[data-agent=supervisor]{--c:var(--a-supervisor)}[data-agent=banking]{--c:var(--a-banking)}
-[data-agent=fraud]{--c:var(--a-fraud)}[data-agent=credit]{--c:var(--a-credit)}
-#trace{list-style:none;margin:0;padding:12px 16px;overflow-y:auto;height:50dvh;display:flex;flex-direction:column;gap:12px}
+.agents{display:flex;flex-wrap:wrap;gap:6px 16px;padding:4px 20px 12px;border-bottom:1px solid var(--border)}
+.agents span{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--fg-muted);transition:color .18s}
+.agents span:not(.on){--c:var(--border)}
+.agents span.on{color:var(--fg);font-weight:500}
+#trace{list-style:none;margin:0;padding:16px 20px;overflow-y:auto;height:46dvh;flex:1}
 #trace .none{color:var(--fg-muted)}
-.row{border-left:2px solid var(--border);padding-left:12px;animation:fade .2s ease-out}
-.row.err{border-left-color:var(--danger)}
-@keyframes fade{from{opacity:0}}
-.row .head{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
-.row .chip{color:var(--fg);border-color:var(--c)}
-.row .chip .dot{background:var(--c)}
+.row{position:relative;padding:0 0 16px 22px;animation:rise .2s ease-out}
+.row::before{content:"";position:absolute;left:0;top:7px;width:9px;height:9px;border-radius:50%;background:var(--c)}
+.row::after{content:"";position:absolute;left:4px;top:20px;bottom:0;width:1px;background:var(--border)}
+.row:last-child::after{display:none}
+.row.wait::before{background:var(--card);box-shadow:inset 0 0 0 2px var(--c)}
+.row .who{font-size:12px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;color:var(--c)}
 .row .title{font-weight:500}
+.row code{font:400 12px var(--mono);color:var(--fg-muted);margin-left:6px}
 .row.err .title{color:var(--danger)}
-.row .sub{margin:4px 0 0;color:var(--fg-muted);font-size:14px;overflow-wrap:anywhere}
-.row details{margin-top:4px;display:block}
-.row summary{cursor:pointer;color:var(--fg-muted);font-size:14px;min-height:28px;padding:0}
-.row pre{margin:4px 0 0;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:var(--radius);font:400 13px/1.5 var(--mono);overflow-x:auto;max-height:240px}
+.row .sub{margin:2px 0 0;color:var(--fg-muted);font-size:14px;overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.row details{margin-top:2px}
+.row summary{cursor:pointer;color:var(--fg-muted);font-size:13px;min-height:28px;display:inline-flex;align-items:center;text-decoration:underline;text-underline-offset:3px;list-style:none}
+.row summary::-webkit-details-marker{display:none}
+.row pre{margin:4px 0 0;padding:10px;background:var(--bg);border:1px solid var(--border);border-radius:8px;font:400 12.5px/1.5 var(--mono);overflow-x:auto;max-height:220px}
+#stats{margin:0;padding:10px 20px;border-top:1px solid var(--border);font-size:13px;color:var(--fg-muted);min-height:40px}
 
 @media (min-width:1024px){
   body{height:100dvh}
-  main{grid-template-columns:58fr 42fr;overflow:hidden}
+  main{grid-template-columns:minmax(0,1fr) 400px;overflow:hidden;padding:20px;gap:20px}
   #messages{height:auto;flex:1;min-height:0}
-  #trace{height:auto;flex:1}
+  #trace{height:auto}
   aside>details>summary{pointer-events:none;cursor:default}
 }
-@media (prefers-reduced-motion:reduce){.row,.working .dot{animation:none}*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <header>
-  <div class="brand">
-    <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>
-    Meridian Bank <span>Multi-Agent Console</span>
-  </div>
-  <div class="field"><label for="customer">Customer</label><select id="customer"></select></div>
-  <div class="pill" id="mode" role="status">Checking mode...</div>
+  <div class="brand">Meridian <span>Multi-agent banking desk</span></div>
+  <div class="field"><label for="customer">Signed in as</label><select id="customer"></select></div>
+  <div class="pill" id="mode" role="status"><span class="dot"></span><span>Checking...</span></div>
 </header>
 <main>
   <section class="chat" aria-label="Chat">
@@ -125,16 +136,17 @@ aside .body{display:flex;flex-direction:column;min-height:0;flex:1}
     <div class="chips" id="chips"></div>
     <form id="form">
       <div><label class="sr-only" for="input">Message</label>
-      <textarea id="input" rows="1" placeholder="Type a request" autocomplete="off"></textarea></div>
-      <button class="primary" id="send" type="submit"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4z"/></svg>Send</button>
+      <textarea id="input" rows="1" placeholder="Ask about your money, a payment or a loan" autocomplete="off"></textarea></div>
+      <button class="primary" id="send" type="submit">Send<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
     </form>
   </section>
   <aside aria-label="Agent trace">
     <details id="traceBox" open>
-      <summary>Agent trace</summary>
+      <summary><strong>Behind the scenes</strong><small>Who worked on your last request, step by step</small></summary>
       <div class="body">
         <div class="agents" id="agents"></div>
         <ol id="trace"></ol>
+        <p id="stats" role="status"></p>
       </div>
     </details>
   </aside>
@@ -142,15 +154,18 @@ aside .body{display:flex;flex-direction:column;min-height:0;flex:1}
 <script>
 "use strict";
 const AGENTS={supervisor:"Supervisor",banking:"Banking",fraud:"Fraud",credit:"Credit"};
-const PROMPTS=["What's my balance and my last 5 transactions?","Do any of my recent transactions look suspicious?","Am I eligible for a 5 lakh personal loan over 3 years?","Transfer 5000 from ACC1001 to ACC2001","Block my credit card, I think it was used fraudulently"];
+const BUSY={banking:"Banking is looking into it",fraud:"Fraud is checking this",credit:"Credit is running the numbers"};
+const TOOL_TEXT={get_profile:"Looked up the profile",get_accounts:"Checked account balances",get_transactions:"Pulled recent transactions",
+  get_cards:"Looked up the cards",block_card:"Blocked the card",score_transaction:"Scored a transaction",screen_transfer:"Screened the transfer",
+  request_transfer:"Prepared the transfer",get_credit_report:"Pulled the credit report",get_loans:"Looked up existing loans",
+  check_loan_eligibility:"Ran the eligibility check"};
 const SVG={
   check:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 6L9 17l-5-5"/></svg>',
-  x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>',
-  shield:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/></svg>'
+  x:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18 6L6 18M6 6l12 12"/></svg>'
 };
 const $=id=>document.getElementById(id);
 const messages=$("messages"),traceEl=$("trace"),input=$("input"),sendBtn=$("send"),customerSel=$("customer");
-let history=[],busy=false,working=null;
+let history=[],busy=false,working=null,pending=[],calls=0;
 
 function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 function inline(s){return esc(s).replace(/\*\*(.+?)\*\*/g,"<b>$1</b>")}
@@ -165,68 +180,76 @@ function md(text){
 function el(tag,cls,text){const e=document.createElement(tag);if(cls)e.className=cls;if(text!=null)e.textContent=text;return e}
 function scrollEnd(e){e.scrollTop=e.scrollHeight}
 function agentName(a){return AGENTS[a]||String(a)}
+function money(n){return "₹"+Number(n).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function clock(){return new Date().toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}
 
 /* chat */
 function addMsg(role,text){
-  $("empty")?.remove();
-  const m=el("div","msg "+role);
-  if(role==="assistant")m.innerHTML=md(text);
-  else{m.textContent=text;if(role==="error")m.setAttribute("role","alert")}
+  $("hello")?.remove();
+  const m=el("div","msg "+role),b=el("div","bubble");
+  if(role==="assistant")b.innerHTML=md(text);
+  else{b.textContent=text;if(role==="error")m.setAttribute("role","alert")}
+  m.append(el("span","meta",(role==="user"?"You":"Meridian")+" · "+clock()),b);
   messages.append(m);scrollEnd(messages);
 }
 function setWorking(agent){
-  $("empty")?.remove();
-  if(!working){working=el("div","msg working");messages.append(working)}
-  const d=el("span","dot");
-  if(agent)d.style.setProperty("--dc","var(--a-"+agent+")");
-  working.replaceChildren(d,el("span",null,agent?agentName(agent)+" agent working...":"Supervisor is routing..."));
-  scrollEnd(messages);
+  $("hello")?.remove();
+  if(!working){working=el("div","msg assistant");messages.append(working)}
+  const b=el("div","bubble typing");
+  b.append(el("i"),el("i"),el("i"),document.createTextNode(BUSY[agent]||"Finding the right team"));
+  working.replaceChildren(b);scrollEnd(messages);
 }
 function clearWorking(){working?.remove();working=null}
 
 /* trace */
-function chipEl(agent){
-  const c=el("span","chip");c.dataset.agent=agent;
-  c.append(el("span","dot"),document.createTextNode(agentName(agent)));return c;
-}
 function lightUp(agent){document.querySelector('#agents [data-agent="'+agent+'"]')?.classList.add("on")}
 function resetTrace(){
-  traceEl.replaceChildren(el("li","none","No activity yet."));
-  $("agents").replaceChildren(...Object.keys(AGENTS).map(chipEl));
+  traceEl.replaceChildren(el("li","none","Ask something and each agent's steps will show up here."));
+  $("agents").replaceChildren(...Object.keys(AGENTS).map(a=>{
+    const s=el("span");s.dataset.agent=a;s.append(el("span","dot"),document.createTextNode(AGENTS[a]));return s;
+  }));
+  $("stats").textContent="";pending=[];calls=0;
 }
-function addRow(agent,title,sub,json,isErr){
+function addRow(agent,title,sub,tool){
   traceEl.querySelector(".none")?.remove();
-  const r=el("li","row"+(isErr?" err":"")),h=el("div","head");
-  h.append(chipEl(agent),el("span","title",title));r.append(h);
+  lightUp(agent);
+  const r=el("li","row"),t=el("div","title",title);
+  r.dataset.agent=agent;
+  if(tool)t.append(el("code",null,tool));
+  r.append(el("div","who",agentName(agent)),t);
   if(sub)r.append(el("p","sub",sub));
-  if(json!==undefined){
-    const d=el("details"),pre=el("pre");
-    pre.textContent=JSON.stringify(json,null,2);
-    d.append(el("summary",null,"JSON"),pre);r.append(d);
-  }
   traceEl.append(r);scrollEnd(traceEl);
+  return r;
+}
+function addData(row,data){
+  const d=el("details"),pre=el("pre");
+  pre.textContent=JSON.stringify(data,null,2);
+  d.append(el("summary",null,"Show data"),pre);row.append(d);
+}
+function outcome(res){
+  if(!res||typeof res!=="object")return null;
+  if(res.error)return String(res.error);
+  if(res.level)return res.level[0].toUpperCase()+res.level.slice(1)+" risk, score "+res.risk_score;
+  if(res.status==="pending_approval")return "Waiting for the customer to approve";
+  if(res.status==="blocked")return "Blocked by the fraud policy";
+  if(res.decision)return "Decision: "+res.decision;
+  return null;
 }
 
 /* approval card */
-function fmt(n){return Number(n).toLocaleString("en-IN")}
 function addApproval(ev){
   const args=(ev.action&&ev.action.args)||{},risk=ev.risk||{};
   const level=["low","medium","high"].includes(risk.level)?risk.level:"medium";
-  const card=el("div","card"),h=el("h3");
-  h.innerHTML=SVG.shield;h.append("Transfer needs your approval");
-  const dl=el("dl");
-  for(const [k,v] of [["From",args.from_account],["To",args.to_account],["Amount",fmt(args.amount)]]){
-    dl.append(el("dt",null,k),el("dd","mono",v));
-  }
-  const rd=el("dd");rd.append(el("span","badge "+level,level));
-  dl.append(el("dt",null,"Risk"),rd);
-  card.append(h,dl);
+  const card=el("div","card"),path=el("p","path"),rk=el("div","risk");
+  path.append("from ",el("b",null,args.from_account)," to ",el("b",null,args.to_account));
+  rk.append(el("span","badge "+level,level[0].toUpperCase()+level.slice(1)+" risk"),"Fraud score "+(risk.risk_score??"n/a")+" of 100");
+  card.append(el("p","eyebrow","Needs your approval"),el("p","amount",money(args.amount)),path,rk);
   if(Array.isArray(risk.reasons)&&risk.reasons.length){
     const ul=el("ul");risk.reasons.forEach(x=>ul.append(el("li",null,x)));card.append(ul);
   }
   const acts=el("div","actions"),yes=el("button","primary"),no=el("button");
   yes.type=no.type="button";
-  yes.innerHTML=SVG.check+"Approve transfer";no.innerHTML=SVG.x+"Reject";
+  yes.innerHTML=SVG.check+"Approve and send";no.innerHTML=SVG.x+"Cancel";
   acts.append(yes,no);card.append(acts);
   const decide=async ok=>{
     yes.disabled=no.disabled=true;
@@ -237,31 +260,41 @@ function addApproval(ev){
       res=await r.json();
     }catch(e){res={ok:false,message:"Could not reach the server: "+e.message,result:null}}
     const p=el("p","result "+(res.ok?"ok":"ko"),res.message||(res.ok?"Done.":"Failed."));
-    p.setAttribute("role","status");card.append(p);
-    addRow("banking",ok?"Transfer approval submitted":"Transfer rejected",res.message,res.result||undefined,!res.ok);
+    p.setAttribute("role","status");acts.replaceWith(p);
+    const row=addRow("banking",ok?"Customer approved the transfer":"Customer cancelled the transfer",res.message);
+    if(!res.ok)row.classList.add("err");
+    if(res.result)addData(row,res.result);
     scrollEnd(messages);
   };
   yes.onclick=()=>decide(true);no.onclick=()=>decide(false);
-  $("empty")?.remove();messages.append(card);scrollEnd(messages);
-  lightUp("banking");
-  addRow("banking","Approval requested","Waiting for a human decision on "+fmt(args.amount)+" from "+args.from_account+" to "+args.to_account,ev);
+  $("hello")?.remove();messages.append(card);scrollEnd(messages);
+  addRow("banking","Paused for human approval","Nothing moves until the customer decides.");
 }
 
 /* events */
 function handle(ev){
   switch(ev.type){
     case "route":{
-      const list=ev.agents||[];
-      lightUp("supervisor");list.forEach(lightUp);
-      addRow("supervisor","Supervisor routed to "+list.map(agentName).join(", "),ev.reason);break;
+      const list=(ev.agents||[]).map(agentName);
+      addRow("supervisor",list.length?"Sent this to "+list.join(", then "):"Answered directly",ev.reason);break;
     }
-    case "agent_start":lightUp(ev.agent);setWorking(ev.agent);addRow(ev.agent,agentName(ev.agent)+" started",ev.task);break;
-    case "tool_call":lightUp(ev.agent);addRow(ev.agent,"called "+ev.tool,null,ev.args||{});break;
+    case "agent_start":setWorking(ev.agent);addRow(ev.agent,"Picked up the task",ev.task);break;
+    case "tool_call":{
+      const row=addRow(ev.agent,TOOL_TEXT[ev.tool]||"Used a tool",null,ev.tool);
+      row.classList.add("wait");pending.push({row,ev});calls++;break;
+    }
     case "tool_result":{
-      const bad=!!ev.result&&typeof ev.result==="object"&&"error" in ev.result;
-      lightUp(ev.agent);addRow(ev.agent,ev.tool+" returned",bad?String(ev.result.error):null,ev.result===undefined?null:ev.result,bad);break;
+      const i=pending.findIndex(p=>p.ev.agent===ev.agent&&p.ev.tool===ev.tool);
+      const hit=i<0?null:pending.splice(i,1)[0];
+      const row=hit?hit.row:addRow(ev.agent,TOOL_TEXT[ev.tool]||"Used a tool",null,ev.tool);
+      row.classList.remove("wait");
+      const note=outcome(ev.result);
+      if(note)row.append(el("p","sub",note));
+      if(ev.result&&ev.result.error)row.classList.add("err");
+      addData(row,{input:hit?hit.ev.args:{},output:ev.result});
+      scrollEnd(traceEl);break;
     }
-    case "agent_done":addRow(ev.agent,agentName(ev.agent)+" finished",String(ev.summary||"").replace(/\*\*/g,""));break;
+    case "agent_done":addRow(ev.agent,"Reported back",String(ev.summary||"").replace(/\*\*/g,""));break;
     case "approval":clearWorking();addApproval(ev);break;
     case "answer":clearWorking();addMsg("assistant",ev.text);history.push({role:"assistant",content:ev.text});break;
     case "error":clearWorking();addMsg("error",ev.message||"Something went wrong.");break;
@@ -276,9 +309,9 @@ function parseChunk(chunk){
 
 async function send(text){
   text=text.trim();
-  if(!text||busy)return;
+  if(!text||busy||!customerSel.value)return;
   busy=true;sendBtn.disabled=true;input.value="";
-  const prior=history.slice(-8);
+  const prior=history.slice(-8),started=performance.now();
   history.push({role:"user",content:text});
   addMsg("user",text);resetTrace();setWorking(null);
   try{
@@ -295,6 +328,8 @@ async function send(text){
       if(done)break;
     }
     if(buf.trim())parseChunk(buf);
+    const team=document.querySelectorAll("#agents .on").length;
+    $("stats").textContent=team+(team===1?" agent, ":" agents, ")+calls+(calls===1?" tool call, ":" tool calls, ")+((performance.now()-started)/1000).toFixed(1)+" s";
   }catch(e){
     clearWorking();addMsg("error","Request failed: "+e.message);
   }finally{
@@ -303,12 +338,24 @@ async function send(text){
 }
 
 /* setup */
+function quick(cid){
+  return [["Balance and recent activity","What's my balance and my last 5 transactions?"],
+    ["Anything suspicious?","Do any of my recent transactions look suspicious?"],
+    ["Can I get a ₹5 lakh loan?","Am I eligible for a 5 lakh personal loan over 3 years?"],
+    ["Send ₹5,000","Transfer 5000 to "+(cid==="C002"?"ACC1001":"ACC2001")],
+    ["Block my card","Block my credit card, I think it was used fraudulently"]];
+}
 function newChat(){
   history=[];working=null;
-  const p=el("p","empty","Ask about balances, transactions, fraud, loans or transfers.");
-  p.id="empty";messages.replaceChildren(p);resetTrace();
+  const h=new Date().getHours(),first=customerSel.selectedOptions[0]?.dataset.first;
+  const box=el("div","hello");box.id="hello";
+  box.append(el("h1",null,(h<12?"Good morning":h<17?"Good afternoon":"Good evening")+(first?", "+first:"")+"."),
+    el("p",null,"What would you like to sort out today?"));
+  messages.replaceChildren(box);resetTrace();
+  $("chips").replaceChildren(...quick(customerSel.value).map(([label,prompt])=>{
+    const b=el("button",null,label);b.type="button";b.title=prompt;b.onclick=()=>send(prompt);return b;
+  }));
 }
-PROMPTS.forEach(p=>{const b=el("button",null,p);b.type="button";b.onclick=()=>send(p);$("chips").append(b)});
 $("form").onsubmit=e=>{e.preventDefault();send(input.value)};
 input.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();send(input.value)}};
 customerSel.onchange=newChat;
@@ -319,10 +366,14 @@ $("traceBox").addEventListener("toggle",syncTrace);
 newChat();
 
 fetch("/api/health").then(r=>r.json()).then(h=>{
-  $("mode").textContent=h.mode==="llm"?"LLM · "+h.model:"Rule-based fallback (no API key)";
-}).catch(()=>{$("mode").textContent="Backend unreachable"});
+  $("mode").classList.toggle("live",h.mode==="llm");
+  $("mode").lastElementChild.textContent=h.mode==="llm"?"Live model: "+h.model:"Rule-based mode (no API key)";
+}).catch(()=>{$("mode").lastElementChild.textContent="Backend unreachable"});
 fetch("/api/customers").then(r=>r.json()).then(d=>{
-  d.customers.forEach(c=>{const o=el("option",null,c.name+" ("+c.id+", "+c.segment+")");o.value=c.id;customerSel.append(o)});
+  d.customers.forEach(c=>{
+    const o=el("option",null,c.name+" · "+c.segment);o.value=c.id;o.dataset.first=c.name.split(" ")[0];customerSel.append(o);
+  });
+  newChat();
 }).catch(()=>addMsg("error","Could not load customers."));
 </script>
 </body>

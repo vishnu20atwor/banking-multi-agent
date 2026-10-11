@@ -26,7 +26,7 @@ python app.py
 
 Open http://127.0.0.1:8000.
 
-The LLM key is optional. To use the model, put a free Groq key from https://console.groq.com/keys on the `GROQ_API_KEY=` line in `.env`. Without a key the app runs on a rule-based fallback, and the header shows "Rule-based fallback (no API key)". Git ignores `.env`.
+The LLM key is optional. To use the model, put a free Groq key from https://console.groq.com/keys on the `GROQ_API_KEY=` line in `.env`. Without a key the app runs on a rule-based fallback, and the header shows "Rule-based mode (no API key)". Git ignores `.env`.
 
 ### Run the checks
 
