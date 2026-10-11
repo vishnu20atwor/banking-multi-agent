@@ -460,5 +460,5 @@ def run(cid, message, history=()):
             yield {"type": "error", "message": f"The language model failed mid-request: {e}"}
             return
         yield {"type": "error",
-               "message": f"Language model unavailable ({type(e).__name__}); using the rule-based fallback."}
+               "message": f"Language model unavailable, using the rule-based fallback. {type(e).__name__}: {str(e)[:300]}"}
         yield from _pipeline(cid, message, [], llm=False)
