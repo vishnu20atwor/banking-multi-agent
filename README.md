@@ -63,19 +63,7 @@ Select the customer in the header dropdown first. The agents in the table are th
 
 ## Architecture
 
-```mermaid
-flowchart TD
-    UI["Browser UI<br/>chat + live agent trace"] -->|"POST /api/chat (SSE)"| API["FastAPI<br/>/api/chat, /api/approve"]
-    UI -->|"POST /api/approve"| API
-    API --> SUP["Supervisor<br/>route, sequence, merge"]
-    SUP --> BK["Banking agent"]
-    SUP --> FR["Fraud agent"]
-    SUP --> CR["Credit agent"]
-    BK --> TL["Tool layer<br/>per-agent allow-list<br/>server-injected customer id<br/>approval gate"]
-    FR --> TL
-    CR --> TL
-    TL --> CORE["Simulated core banking<br/>bank.py"]
-```
+![Architecture: browser UI, FastAPI server, Supervisor, Banking, Fraud and Credit agents, tool layer, simulated core banking](docs/architecture.svg)
 
 `/api/approve` calls `agents.approve`, which calls `bank.execute_transfer` directly. It is not a model tool and does not pass the allow-list.
 

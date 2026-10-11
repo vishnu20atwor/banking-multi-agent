@@ -1,0 +1,46 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 572" width="760" height="572" role="img" aria-label="Architecture: browser UI, FastAPI server, Supervisor, three specialist agents, tool layer, simulated core banking" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5A615B"/></marker>
+  </defs>
+  <rect width="760" height="572" rx="12" fill="#F6F3EC"/>
+  <g fill="#FFFFFF" stroke="#DDD6C8" stroke-width="1.5">
+    <rect x="230" y="20" width="300" height="56" rx="8"/>
+    <rect x="230" y="110" width="300" height="56" rx="8"/>
+    <rect x="230" y="200" width="300" height="56" rx="8" stroke="#8A5200"/>
+    <rect x="60" y="300" width="180" height="50" rx="8" stroke="#1D5FA8"/>
+    <rect x="290" y="300" width="180" height="50" rx="8" stroke="#B42318"/>
+    <rect x="520" y="300" width="180" height="50" rx="8" stroke="#1F7A4D"/>
+    <rect x="60" y="394" width="640" height="68" rx="8"/>
+    <rect x="230" y="496" width="300" height="56" rx="8"/>
+  </g>
+  <g stroke="#5A615B" stroke-width="1.5" fill="none" marker-end="url(#a)">
+    <path d="M380 76V108"/>
+    <path d="M380 166V198"/>
+    <path d="M330 256L160 298"/>
+    <path d="M380 256V298"/>
+    <path d="M430 256L600 298"/>
+    <path d="M150 350V392"/>
+    <path d="M380 350V392"/>
+    <path d="M610 350V392"/>
+    <path d="M380 462V494"/>
+  </g>
+  <g text-anchor="middle" fill="#1F2421">
+    <g font-size="16" font-weight="600">
+      <text x="380" y="44">Browser UI</text>
+      <text x="380" y="134">FastAPI server</text>
+      <text x="380" y="224">Supervisor agent</text>
+      <text x="150" y="330">Banking agent</text>
+      <text x="380" y="330">Fraud agent</text>
+      <text x="610" y="330">Credit agent</text>
+      <text x="380" y="420">Tool layer</text>
+      <text x="380" y="520">Simulated core banking</text>
+    </g>
+    <g font-size="13" fill="#5A615B">
+      <text x="380" y="63">chat and live agent trace</text>
+      <text x="380" y="153">/api/chat (streamed events), /api/approve</text>
+      <text x="380" y="243">route, sequence, merge</text>
+      <text x="380" y="444">per-agent allow-list · server-injected customer id · approval gate</text>
+      <text x="380" y="539">bank.py: accounts, cards, fraud rules, loan rules</text>
+    </g>
+  </g>
+</svg>
