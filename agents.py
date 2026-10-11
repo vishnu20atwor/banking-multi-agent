@@ -17,7 +17,7 @@ if _env.exists():
             os.environ.setdefault(_k.strip(), _v.strip())
 
 # `or` rather than a getenv default: CI and .env can supply these as empty strings
-MODEL = os.getenv("LLM_MODEL") or "llama-3.3-70b-versatile"
+MODEL = os.getenv("LLM_MODEL") or "openai/gpt-oss-120b"
 BASE_URL = os.getenv("LLM_BASE_URL") or "https://api.groq.com/openai/v1"
 API_KEY = os.getenv("LLM_API_KEY") or os.getenv("GROQ_API_KEY")
 

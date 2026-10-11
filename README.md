@@ -115,7 +115,7 @@ flowchart TD
   - Levels: 60 or more is high, 30 to 59 is medium, below 30 is low. A high transfer is blocked.
   - Loan rate from credit score: 750 or more 10.5%; 700 to 749 12%; 650 to 699 14.5%; below 650 18%.
   - Loan decision: declined if the score is below 600, DTI after the loan is above 55%, or KYC is not verified. Refer if the score is below 700, DTI is above 40%, or there is a missed payment in the last 12 months. Otherwise approved. DTI is (existing EMIs + new EMI) / monthly income.
-- **Provider-agnostic.** The LLM client is the OpenAI SDK. `LLM_BASE_URL` defaults to Groq and `LLM_MODEL` defaults to `llama-3.3-70b-versatile`. Any OpenAI-compatible endpoint should work by changing those two values. This project is only set up for the Groq default.
+- **Provider-agnostic.** The LLM client is the OpenAI SDK. `LLM_BASE_URL` defaults to Groq and `LLM_MODEL` defaults to `openai/gpt-oss-120b`. Any OpenAI-compatible endpoint should work by changing those two values. This project is only set up for the Groq default.
 - **Small on purpose.** Three direct dependencies, no agent framework and no build step. The orchestration logic is in one file, `agents.py`, so a reader can follow a request from start to finish.
 
 ## Mapping to the reference architecture
