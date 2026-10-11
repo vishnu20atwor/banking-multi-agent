@@ -37,6 +37,15 @@ python test_agents.py
 
 Each script prints `ok` when every check passes. A failed check stops the script with a traceback. Neither script needs a key. `test_agents.py` forces the rule-based brain.
 
+### Key in GitHub secrets
+
+The app reads `GROQ_API_KEY` from the environment, so the key never has to be in a file.
+
+- **GitHub Actions:** add a repository secret named `GROQ_API_KEY` (Settings, Secrets and variables, Actions). The `checks` workflow runs both check scripts on every push, then `test_llm.py`, which sends three real requests through the LLM brain. Without the secret that step prints `skipped`. To use a different model, add a repository variable `LLM_MODEL`.
+- **Codespaces:** add a Codespaces secret with the same name. It is injected as an environment variable, so `python app.py` starts in LLM mode with no `.env`.
+
+A GitHub secret is only visible to Actions and Codespaces. A local clone still needs `.env` or an exported variable.
+
 ## Use cases to try
 
 Select the customer in the header dropdown first. The agents in the table are the ones the rule-based brain runs. With a key, the model chooses the agents, so the routing can differ.
@@ -130,7 +139,7 @@ flowchart TD
 - The rule-based fallback understands only the phrasings its patterns cover. Other phrasings get the help text or the wrong agent.
 - The pending-approval store has no expiry. An approval stays open until someone acts on it.
 - The LLM path depends on the model returning valid JSON and well-formed tool calls. Bad output triggers the fallback or an error event.
-- The LLM path has no automated tests. `test_agents.py` forces the rule-based brain.
+- The LLM path is covered only by `test_llm.py`, a live smoke test that needs a key and checks routing and tool use, not answer quality. `test_agents.py` forces the rule-based brain.
 - `loan_type` is accepted by the eligibility check and ignored.
 - There is no retrieval over policy documents, so the agents cannot quote bank policy.
 

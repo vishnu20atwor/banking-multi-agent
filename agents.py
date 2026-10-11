@@ -16,8 +16,9 @@ if _env.exists():
         if _sep and not _k.strip().startswith("#"):
             os.environ.setdefault(_k.strip(), _v.strip())
 
-MODEL = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
-BASE_URL = os.getenv("LLM_BASE_URL", "https://api.groq.com/openai/v1")
+# `or` rather than a getenv default: CI and .env can supply these as empty strings
+MODEL = os.getenv("LLM_MODEL") or "llama-3.3-70b-versatile"
+BASE_URL = os.getenv("LLM_BASE_URL") or "https://api.groq.com/openai/v1"
 API_KEY = os.getenv("LLM_API_KEY") or os.getenv("GROQ_API_KEY")
 
 client = None
